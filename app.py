@@ -2,6 +2,9 @@ import streamlit as st
 from pathlib import Path
 import json
 import yaml
+import spacy
+import subprocess
+import sys
 from modules.extract import extract_text
 from modules.skills import extract_skills, canonical_skillset
 from modules.score import compute_resume_score, summarize_findings
@@ -11,6 +14,12 @@ from modules.qna import generate_qna
 APP_TITLE = "Skill Edge: Resume Analyzer (Streamlit)"
 DATA_DIR = Path("data_store")
 DATA_DIR.mkdir(exist_ok=True)
+
+try:
+    nlp = spacy.load("en_core_web_sm")
+except:
+    subprocess.run([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
+    nlp = spacy.load("en_core_web_sm")
 
 # ---------------------- Auth utils ----------------------
 def load_users():
@@ -198,3 +207,4 @@ def main():
 if __name__ == "__main__":
     st.set_page_config(page_title=APP_TITLE, page_icon="🧩", layout="wide")
     main()
+
